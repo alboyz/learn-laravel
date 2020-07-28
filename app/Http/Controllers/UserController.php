@@ -12,8 +12,8 @@ class UserController extends Controller
     {
         if ($request->hasFile('image')) {
             User::uploadAvatar($request->image);
-            return redirect()->back();
+            return redirect()->back()->with('msg','Image Uploaded');
         }
-        return redirect()->back();
+        return redirect()->back()->with('err','Image Not Upload');
     }
 }
