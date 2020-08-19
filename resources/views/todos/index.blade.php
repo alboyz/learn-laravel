@@ -15,6 +15,7 @@
             <h1 class="text-2xl">All Todo</h1>
             <a class="mx-5 py-2 px-1 bg-blue-400 cursor-pointer rounded text-white" href="/todos/create/">Create New</a>
         </div>
+        @include('layouts.flashCreate')
         <ul class="my-2 py-2">
             @foreach ($todo as $tampil)
             <li class="flex justify-center py-2">

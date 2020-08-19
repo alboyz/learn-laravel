@@ -23,8 +23,8 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/todos', 'TodoController@index');
+Route::get('/todos', 'TodoController@index')->name('todo.index');
 Route::get('/todos/create', 'TodoController@create');
 Route::post('/todos/create','TodoController@store');
-//Route::get('/todos/edit', 'TodoController@edit');
-Route::get('/todos/{id}/edit/', 'TodoController@edit');
+Route::get('/todos/{tampil}/edit/', 'TodoController@edit');
+Route::patch('/todos/{tampil}/update/','TodoController@update')->name('todo.update');
