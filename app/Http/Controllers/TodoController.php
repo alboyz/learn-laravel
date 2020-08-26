@@ -4,13 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TodoRequest;
 use App\Todo;
-use Illuminate\Http\Request;
 
 class TodoController extends Controller
 {
     public function Index()
     {
-        $todo = Todo::all();
+        $todo = Todo::orderBy('completed')->get();
         return view('todos.index')->with(['todo' => $todo]);
     }
     public function Create()
@@ -27,9 +26,14 @@ class TodoController extends Controller
     {
         return view('todos.edit', compact('tampil'));
     }
-    public function Update(Request $request, Todo $tampil)
+    public function Update(TodoRequest $request, Todo $tampil)
     {
         $tampil->update(['title' => $request->title]);
         return redirect(route('todo.index'))->with('message','Update');
+    }
+     public function completed(Todo $tampil)
+    {
+        $tampil->update(['completed'=>true]);
+        return redirect()->back()->with('message','Task Mark Completed');
     }
 }

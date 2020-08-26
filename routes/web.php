@@ -28,3 +28,4 @@ Route::get('/todos/create', 'TodoController@create');
 Route::post('/todos/create','TodoController@store');
 Route::get('/todos/{tampil}/edit/', 'TodoController@edit');
 Route::patch('/todos/{tampil}/update/','TodoController@update')->name('todo.update');
+Route::put('/todos/{tampil}/completed/','TodoController@completed')->name('todo.completed');
