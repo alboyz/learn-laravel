@@ -36,4 +36,9 @@ class TodoController extends Controller
         $tampil->update(['completed'=>true]);
         return redirect()->back()->with('message','Task Mark Completed');
     }
+     public function incompleted(Todo $tampil)
+    {
+        $tampil->update(['completed'=>false]);
+        return redirect()->back()->with('message','Task Mark Incompleted');
+    }
 }
