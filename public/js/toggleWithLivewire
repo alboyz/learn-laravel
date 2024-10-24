@@ -1,0 +1,91 @@
+if (typeof Livewire === 'undefined') {
+        console.error("Livewire is not loaded.");
+    } else {
+        console.log("Livewire is successfully loaded.");
+
+        // Check if Livewire is initialized (in case livewire:init has already fired)
+        if (window.Livewire) {
+            console.log("Livewire is already initialized");
+            initializeToggle();
+        } 
+    }
+
+    // This function adds the event listener to the #menu
+    function initializeToggle() {
+        const hamburgerToggle = document.querySelector("#menu");
+        const navlink = document.querySelector(".navlink");
+
+        if (hamburgerToggle && navlink) {
+            // Clear any existing event listeners to avoid duplicate bindings
+            hamburgerToggle.replaceWith(hamburgerToggle.cloneNode(true));
+            const newHamburgerToggle = document.querySelector("#menu");
+
+            newHamburgerToggle.addEventListener("click", () => {
+                navlink.classList.toggle("open");
+                console.log("Menu clicked, toggling class");
+
+                if (typeof window.Livewire.dispatch === 'function') {
+                    window.Livewire.dispatch('toggleOpened');
+                    console.log("Livewire.dispatch called");
+                } else {
+                    console.error("Livewire.dispatch is not a function");
+                }
+            });
+        } else {
+            console.error("Menu or navlink element not found");
+        }
+        // Dropdown toggle logic for mobile
+        attachDropdownToggles(); // Call the function to attach dropdown toggles
+    }
+    
+    // Separate function for handling dropdown toggle event listeners
+    function attachDropdownToggles() {
+        const dropdownToggles = document.querySelectorAll(".toggle-dropdown");
+    
+        dropdownToggles.forEach(toggle => {
+            // Clear existing event listeners
+            toggle.replaceWith(toggle.cloneNode(true));
+            const newToggle = document.querySelector(".toggle-dropdown");
+    
+            newToggle.addEventListener("click", function (e) {
+                e.preventDefault(); // Prevent navigating away immediately
+                const dropdown = this.nextElementSibling;
+    
+                if (dropdown && dropdown.classList.contains("dropdown")) {
+                    dropdown.classList.toggle("open"); // Toggle the dropdown open/close
+                }
+    
+                // Ensure any links inside the dropdown use Livewire navigation
+                const links = dropdown.querySelectorAll("a[wire\\:navigate]");
+                links.forEach(link => {
+                    link.addEventListener("click", function (e) {
+                        e.preventDefault(); // Prevent the full page reload
+                        Livewire.dispatch('navigate', { url: this.href });
+                    });
+                });
+            });
+        });
+    }
+
+    
+
+    // Reinitialize after Livewire page navigation
+    document.addEventListener('livewire:navigate', () => {
+        console.log('Livewire is navigating to another page...');
+    });
+
+   // Reinitialize on Livewire load
+   document.addEventListener('livewire:load', () => {
+    console.log("Livewire content loaded. Reinitializing toggle...");
+    initializeToggle();
+});
+
+    // Reinitialize after Livewire updates the DOM (e.g., when Livewire sends updates)
+    Livewire.hook('message.processed', () => {
+        console.log("Livewire content updated. Reinitializing toggle...");
+        initializeToggle();
+    });
+
+
+
+   
