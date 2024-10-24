@@ -1,0 +1,92 @@
+ocument.addEventListener("DOMContentLoaded", () => {
+    console.log("DOM fully loaded and parsed, executing slider script.");
+
+    // Check if Livewire is already available
+    if (window.Livewire) {
+        console.log("Livewire is already loaded. Executing slider script.");
+        initializeSlider();
+    }
+});
+
+function initializeSlider() {
+    console.log("Slider initialization logic runs here.");
+    const container = document.querySelector(".slider-container");
+    const slide = document.querySelector(".slider");
+    let slides = document.querySelectorAll(".car");
+    const interval = 2000;
+    let index = 1;
+    const firstClone = slides[0];
+
+    // Clone the first and last slides
+    const firstSlideClone = slides[0].cloneNode(true);
+    const lastSlideClone = slides[slides.length - 1].cloneNode(true);
+
+    firstSlideClone.id = "first-clone";
+    lastSlideClone.id = "last-clone";
+
+    slide.append(firstSlideClone);
+    slide.prepend(lastSlideClone);
+
+    let slideWidth = slides[index].clientWidth;
+
+    slide.style.transform = `translateX(${-slideWidth * index}px)`;
+
+    window.startSlide = () => {
+        slideId = setInterval(() => {
+            slide.style.transition = "transform 0.5s ease-in-out"; // Add smooth transition
+            nextSlide();
+        }, interval);
+    };
+
+    // Button next
+    window.nextSlide = () => {
+        slides = document.querySelectorAll(".car");
+        if (index >= slides.length - 1) return;
+        index++;
+        slide.style.transform = `translateX(${-slideWidth * index}px)`;
+        slide.style.transition = ".7s";
+    };
+
+    // Button previous
+    window.prevSlide = () => {
+        if (index <= 0) return;
+        index--;
+        slide.style.transform = `translateX(${-slideWidth * index}px)`;
+        slide.style.transition = ".7s";
+    };
+
+    // After the transition, check if the current slide is a clone
+    slide.addEventListener("transitionend", () => {
+        slides = document.querySelectorAll(".car");
+        if (slides[index].id === firstSlideClone.id) {
+            console.log("transition style none");
+            slide.style.transition = "none";
+            index = 1;
+            slide.style.transform = `translateX(${-slideWidth * index}px)`;
+        }
+    });
+
+    // Handle mouseenter to stop the slide
+    container.addEventListener("mouseenter", () => {
+        console.log("Mouse entered slider container, stopping the slide.");
+        clearInterval(slideId); // Stop the slider when hovering
+    });
+
+    // Handle mouseleave to start the slide again
+    container.addEventListener("mouseleave", () => {
+        console.log("Mouse left slider container, resuming the slide.");
+        startSlide(); // Restart the slider when not hovering
+    });
+
+    startSlide();
+
+    // Handle page visibility change
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden") {
+            clearInterval(slideId); // Stop the slider when the page is hidden
+        } else if (document.visibilityState === "visible") {
+            startSlide(); // Resume the slider when the page becomes visible
+        }
+    });
+}
+
