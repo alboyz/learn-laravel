@@ -1,82 +1,109 @@
-    console.log('slider1')
-    //const container = document.querySelector(".slider-container");
-    const slide = document.querySelector(".slider");
-    let slides = document.querySelectorAll(".car");
-    const interval = 2000;
-    let index = 1;
-    
+    console.log("slider1");
+const container = document.querySelector(".slider-container");
 
-    // Clone the first and last slides
-    const firstSlideClone = slides[0].cloneNode(true);
-    const lastSlideClone = slides[slides.length - 1].cloneNode(true);
+const slide = document.querySelector(".slider");
 
-    firstSlideClone.id = "first-clone";
-    lastSlideClone.id = "last-clone";
+let slides = document.querySelectorAll(".car");
 
-    slide.append(firstSlideClone);
-    slide.prepend(lastSlideClone);
+const interval = 2000;
 
-    let slideWidth = slides[index].clientWidth;
+let index = 1;
+
+const firstClone = slides[0];
+
+// Clone the first and last slides
+
+const firstSlideClone = slides[0].cloneNode(true);
+
+const lastSlideClone = slides[slides.length - 1].cloneNode(true);
+
+firstSlideClone.id = "first-clone";
+
+lastSlideClone.id = "last-clone";
+
+slide.append(firstSlideClone);
+
+slide.prepend(lastSlideClone);
+
+let slideWidth = slides[index].clientWidth;
+
+console.log(slideWidth);
+
+slide.style.transform = "translateX(${-slideWidth * index}px)";
+
+console.log(slides);
+
+const startSlide = () => {
+    slideId = setInterval(() => {
+        slide.style.transition = "transform 0.5s ease-in-out"; // Add smooth transition
+
+        nextSlide();
+    }, interval);
+};
+
+//button next
+
+const nextSlide = () => {
+    slides = document.querySelectorAll(".car");
+
+    if (index >= slides.length - 1) return;
+
+    index++;
+
+    slide.style.transform = `translateX(${-slideWidth * index}px)`;
+    slide.style.transition = ".7s";
+};
+
+//button next
+
+const prevSlide = () => {
+    if (index <= 0) return;
+
+    index--;
 
     slide.style.transform = `translateX(${-slideWidth * index}px)`;
 
-    startSlide = () => {
-         slideId = setInterval(() => {
-            index++;
-            slide.style.transition = "transform 0.5s ease-in-out"; // Add smooth transition
-            nextSlide();
-        }, interval);
-    };
+    slide.style.transition = ".7s";
+};
 
-    // Button next
-    nextSlide = () => {
-        slides = document.querySelectorAll(".car");
-        index++;
+// After the transition, check if the current slide is a clone
+
+slide.addEventListener("transitionend", () => {
+    console.log("Transition ended"); // Check if this logs
+
+    slides = document.querySelectorAll(".car");
+
+    if (slides[index].id === firstSlideClone.id) {
+        slide.style.transition = "none";
+
+        console.log("trasition style none");
+
+        index = 1;
+
         slide.style.transform = `translateX(${-slideWidth * index}px)`;
-        slide.style.transition = ".7s";
-    };
+    }
+});
 
-    // Button previous
-    prevSlide = () => {
-        index--;
-        slide.style.transform = `translateX(${-slideWidth * index}px)`;
-        slide.style.transition = ".7s";
-    };
+container.addEventListener("mouseenter", () => {
+    clearInterval(slideId);
+});
 
-    // After the transition, check if the current slide is a clone
-    slide.addEventListener("transitionend", () => {
-        slides = document.querySelectorAll(".car");
-        if (slides[index].id === firstSlideClone.id) {
-            console.log("transition style none");
-            slide.style.transition = "none";
-            index = 1;
-            slide.style.transform = `translateX(${-slideWidth * index}px)`;
-        }
-    });
+container.addEventListener("mouseleave", startSlide);
 
-    // Handle mouseenter to stop the slide
-    container.addEventListener("mouseenter", () => {
-        console.log("Mouse entered slider container, stopping the slide.");
-        clearInterval(slideId); // Stop the slider when hovering
-    });
 
-    // Handle mouseleave to start the slide again
-    container.addEventListener("mouseleave", () => {
-        console.log("Mouse left slider container, resuming the slide.");
-        startSlide(); // Restart the slider when not hovering
-    });
+// Start the slider
 
-    startSlide();
+startSlide();
 
-    // Handle page visibility change
-    document.addEventListener("visibilitychange", () => {
-        if (document.visibilityState === "hidden") {
-            clearInterval(slideId); // Stop the slider when the page is hidden
-        } else if (document.visibilityState === "visible") {
-            startSlide(); // Resume the slider when the page becomes visible
-        }
-    });
+// Handle page visibility change
 
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+        clearInterval(slideId); // Stop the slider when the page is hidden
+    } else if (document.visibilityState === "visible") {
+        startSlide(); // Resume the slider when the page becomes visible
+    }
+});
 
 
 //     setTimeout(() =>{
