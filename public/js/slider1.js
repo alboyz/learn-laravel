@@ -1,5 +1,5 @@
     console.log('slider1')
-    const container = document.querySelector(".slider-container");
+    //const container = document.querySelector(".slider-container");
     const slide = document.querySelector(".slider");
     let slides = document.querySelectorAll(".car");
     const interval = 2000;
